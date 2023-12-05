@@ -1,0 +1,16 @@
+{
+  "name": "aoc-2023",
+  "version": "1.0.0",
+  "type": "module",
+  "author": "Thijs-Jan Huisman",
+  "license": "MIT",
+  "scripts": {
+    "day": "node index.mjs",
+    "test": "ncc run src/day1.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.3",
+    "@vercel/ncc": "^0.38.1",
+    "typescript": "^5.3.2"
+  }
+}
