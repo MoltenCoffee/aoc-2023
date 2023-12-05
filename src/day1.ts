@@ -1,4 +1,4 @@
-import { getInputLines } from "./util";
+import { getInputLines, printPart } from "./util";
 
 const day = 1;
 const lines = await getInputLines(day);
@@ -8,8 +8,10 @@ const calcLinePart1 = (line: string): number => {
   return parseInt([digits[0], digits.at(-1)].join(""));
 };
 
-const part1 = lines.reduce((acc, line) => acc + calcLinePart1(line), 0);
-console.log(part1);
+printPart(
+  1,
+  lines.reduce((acc, line) => acc + calcLinePart1(line), 0)
+);
 
 const writtenDigits: Array<[string, number]> = [
   ["one", 1],
@@ -41,5 +43,7 @@ const calcLinePart2 = (line: string): number => {
   );
 };
 
-const part2 = lines.reduce((acc, line) => acc + calcLinePart2(line), 0);
-console.log(part2);
+printPart(
+  2,
+  lines.reduce((acc, line) => acc + calcLinePart2(line), 0)
+);
