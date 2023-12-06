@@ -24,26 +24,14 @@ const fileExists = async (path) => {
   }
 };
 
-const main = async () => {
-  const args = process.argv.slice(2);
-  const [day] = args;
-
-  // verify day is a number
-  if (isNaN(day)) {
-    throw new Error("day must be a number");
-  }
-
-  const parsed = parseInt(day, 10);
-  if (parsed < 1 || parsed > 25) {
-    throw new Error("day must be between 1 and 25");
-  }
-
+const run = async (day) => {
   const srcPath = `./src/day${day}.ts`;
   const destPath = `./dist/day${day}.mjs`;
   const cachePath = `./dist/cache.json`;
 
   if (!(await fileExists(srcPath))) {
-    throw new Error(`day${day}.ts does not exist`);
+    await create(day);
+    throw new Error(`day${day}.ts does not exist. Files created instead.`);
   }
 
   const cache = (await fileExists(cachePath))
@@ -68,6 +56,49 @@ const main = async () => {
     JSON.stringify({ ...cache, [day]: { mtimeMs: srcMtimeMs } }),
     "utf-8"
   );
+};
+
+const create = async (day) => {
+  const path = `./src/day${day}.ts`;
+
+  if (await fileExists(path)) {
+    throw new Error(`day${day}.ts already exists`);
+  }
+
+  await writeFile(
+    path,
+    `import { getInputLines, printPart } from "./util";
+
+const day = ${day};
+const lines = await getInputLines(day);`
+  );
+
+  await writeFile(`./input/day${day}.txt`, "\n");
+};
+
+const main = async () => {
+  const [day, command = "run"] = process.argv.slice(2);
+  const parsedDay = parseInt(day, 10);
+
+  // verify day is a number
+  if (isNaN(parsedDay)) {
+    throw new Error("day must be a number");
+  }
+
+  if (parsedDay < 1 || parsedDay > 25) {
+    throw new Error("day must be between 1 and 25");
+  }
+
+  switch (command) {
+    case "run":
+      await run(day);
+      break;
+    case "create":
+      await create(day);
+      break;
+    default:
+      throw new Error(`Unknown command: ${command}`);
+  }
 };
 
 main();
